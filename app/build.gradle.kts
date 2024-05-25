@@ -79,7 +79,12 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
     kapt(libs.hilt.android.compiler)
+
+    //Navigation
+    implementation (libs.androidx.navigation.compose)
+
 }
 
 kapt {

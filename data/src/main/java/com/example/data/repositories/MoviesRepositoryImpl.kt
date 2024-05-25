@@ -11,9 +11,7 @@ class MoviesRepositoryImpl @Inject constructor(
     private val service: MovieService
 ) : MoviesRepository {
     override suspend fun getPopularMovies(): List<Movie> {
-        val result = service.getMoviesByCategory(MovieCategory.Popular.name).results
+        val result = service.getMoviesByCategory(MovieCategory.Popular.endPoint).results
         return result.map { it.toDomain() }
     }
-
-
 }
