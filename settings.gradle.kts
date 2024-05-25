@@ -23,3 +23,4 @@ rootProject.name = "MovieApplication(jetpack compose)"
 include(":app")
 include(":core")
 include(":data")
+include(":domain")

@@ -1,4 +1,4 @@
-package com.example.movieapplicationjetpackcompose
+package com.example.movieapplicationjetpackcompose.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.example.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -38,14 +38,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(project(":core"))
-    implementation(project(":domain"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.gson)
 }

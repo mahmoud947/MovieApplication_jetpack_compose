@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 import com.example.data.constants.Constants
 
 @Keep
-data class MovieRes(
+data class MovieDto(
     @SerializedName("adult")
     val adult: Boolean?,
     @SerializedName("backdrop_path")
@@ -36,6 +36,6 @@ data class MovieRes(
     @SerializedName("vote_count")
     val voteCount: Int?
 ) {
-    val posterUri get() = Constants.BASE_IMAGE_URL + posterPath
+    val posterUrl get() = Constants.BASE_IMAGE_URL + posterPath
     val backdropUrl get() = Constants.BASE_IMAGE_URL + backdropPath
 }
