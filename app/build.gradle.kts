@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.movieapplicationjetpackcompose"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -64,6 +64,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":core"))
+    implementation(libs.androidx.compose.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -84,6 +85,16 @@ dependencies {
 
     //Navigation
     implementation (libs.androidx.navigation.compose)
+
+    //coil
+    implementation(libs.coil.compose)
+
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    // ViewModel utilities for Compose
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
+
+    implementation(libs.androidx.hilt.navigation.compose)
 
 }
 
