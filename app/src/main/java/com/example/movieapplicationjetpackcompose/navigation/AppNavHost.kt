@@ -9,6 +9,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteScreen
+import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteViewModel
 import com.example.movieapplicationjetpackcompose.ui.screens.home.HomeScreen
 import com.example.movieapplicationjetpackcompose.ui.screens.home.HomeViewModel
 
@@ -25,7 +27,7 @@ fun AppNavHost(
         startDestination = startDestination
     ) {
         composable(NavigationItem.Home.route) {
-            val viewModel:HomeViewModel = hiltViewModel()
+            val viewModel: HomeViewModel = hiltViewModel()
             val state by viewModel.viewState.collectAsState()
             HomeScreen(
                 state = state,
@@ -35,9 +37,14 @@ fun AppNavHost(
             )
         }
         composable(NavigationItem.Favorite.route) {
-            Box {
-
-            }
+            val viewModel: FavoriteViewModel = hiltViewModel()
+            val state by viewModel.viewState.collectAsState()
+            FavoriteScreen(
+                state = state,
+                onEvent = viewModel::setEvent,
+                effect = viewModel.effect,
+                navController = navController
+            )
         }
         composable(NavigationItem.Details.route) {
         }

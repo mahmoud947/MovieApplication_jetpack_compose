@@ -6,6 +6,7 @@ import com.example.domain.models.MovieCategory
 interface MoviesRepository {
     suspend fun getPopularMovies(): List<Movie>
     suspend fun search(query:String): List<Movie>
+    suspend fun searchOnFavorite(query:String): List<Movie>
 
     suspend fun getFavoriteMovies():List<Movie>
 

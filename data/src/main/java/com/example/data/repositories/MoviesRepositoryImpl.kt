@@ -31,6 +31,10 @@ class MoviesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun searchOnFavorite(query: String): List<Movie> {
+        return dao.searchMoviesByTitle(title = query).map { it.toDomain() }
+    }
+
     override suspend fun getFavoriteMovies(): List<Movie> {
         return dao.getFavoriteMovies().map { it.toDomain() }
     }

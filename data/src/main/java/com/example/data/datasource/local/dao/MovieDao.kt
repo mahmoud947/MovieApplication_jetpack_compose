@@ -21,6 +21,9 @@ interface MovieDao {
     suspend fun isFavorite(movieId: Int):Int?
 
 
+
+    @Query("SELECT * FROM movieentity WHERE title LIKE '%' || :title || '%'")
+    suspend fun searchMoviesByTitle(title: String): List<MovieEntity>
     @Query("DELETE FROM movieentity")
     suspend fun clearAll()
 }
