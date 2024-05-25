@@ -3,7 +3,6 @@ package com.example.data.datasource.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.domain.models.MovieCategory
 
 @Entity
 data class MovieEntity(
@@ -11,7 +10,7 @@ data class MovieEntity(
     val id: Int,
     val adult: Boolean?,
     val backdropUrl: String?,
-    val genreIds: List<Int>,
+    val genreIds: List<Int?>,
     val originalLanguage: String?,
     val originalTitle: String?,
     val overview: String?,

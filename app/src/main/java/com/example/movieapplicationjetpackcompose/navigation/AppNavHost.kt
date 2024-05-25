@@ -1,5 +1,6 @@
 package com.example.movieapplicationjetpackcompose.navigation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +33,11 @@ fun AppNavHost(
                 effect = viewModel.effect,
                 navController = navController
             )
+        }
+        composable(NavigationItem.Favorite.route) {
+            Box {
+
+            }
         }
         composable(NavigationItem.Details.route) {
         }

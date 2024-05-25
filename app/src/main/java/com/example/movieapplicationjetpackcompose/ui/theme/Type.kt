@@ -12,12 +12,12 @@ import com.example.movieapplicationjetpackcompose.R
 val mulishFontFamily = FontFamily(
     fonts = listOf(
         Font(
-            resId = com.example.domain.R.font.mulish,
+            resId = R.font.mulish,
             weight = FontWeight.W400,
             style = FontStyle.Italic
         ),
         Font(
-            resId = com.example.domain.R.font.mulish_bold,
+            resId = R.font.mulish_bold,
             weight = FontWeight.W600,
             style = FontStyle.Normal
         ),
@@ -26,7 +26,7 @@ val mulishFontFamily = FontFamily(
 val merriweatherFontFamily = FontFamily(
     fonts = listOf(
         Font(
-            resId = com.example.domain.R.font.merriweather_black,
+            resId = R.font.merriweather_black,
             weight = FontWeight.W900,
             style = FontStyle.Normal
         ),

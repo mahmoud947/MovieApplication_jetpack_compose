@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.domain.repository.MoviesRepository
+import com.example.movieapplicationjetpackcompose.components.BottomNavigationBar
 import com.example.movieapplicationjetpackcompose.navigation.AppNavHost
 import com.example.movieapplicationjetpackcompose.ui.theme.MovieApplicationjetpackComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,7 @@ import javax.inject.Inject
 import kotlin.math.log
 
 private const val TAG = "MainActivity"
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +31,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MovieApplicationjetpackComposeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppNavHost(navController = rememberNavController(), modifier = Modifier.padding(innerPadding))
+                val navController = rememberNavController()
+                Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
+                    BottomNavigationBar(navController = navController)
+                }) { innerPadding ->
+                    AppNavHost(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
