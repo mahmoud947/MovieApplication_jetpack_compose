@@ -5,6 +5,7 @@ import com.example.core.base.ViewSideEffect
 import com.example.core.base.ViewState
 import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
+import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteContract
 
 
 class HomeContract {
@@ -15,6 +16,7 @@ class HomeContract {
         data object OnOpenSearch : Event()
         data class OnSearchQueryChange(val query: String) : Event()
         data class OnSearchTriggered(val query: String) : Event()
+        data class AddToFavorite(val movie: Movie): Event()
     }
 
     sealed class SideEffects : ViewSideEffect {

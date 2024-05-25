@@ -96,10 +96,13 @@ fun HomeScreen(
                             movieImageUrl = movie.posterUrl,
                             title = movie.title,
                             rating = movie.voteAverage.toString(),
-                            isFavorite = true
-                        ) {
-
-                        }
+                            isFavorite = movie.isFavorite,
+                            onFavoriteClick = {isFavorite->
+                                if (!isFavorite){
+                                    onEvent(HomeContract.Event.AddToFavorite(movie = movie))
+                                }
+                            }
+                        )
                     }
                 }
             }

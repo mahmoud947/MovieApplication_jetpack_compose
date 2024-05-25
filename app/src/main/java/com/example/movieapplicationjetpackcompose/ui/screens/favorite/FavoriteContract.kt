@@ -10,15 +10,17 @@ import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
 class FavoriteContract {
 
     sealed class Event : ViewEvent {
-        data object FetchMovies : Event()
+        data object FetchFavoriteMovies : Event()
         data object OnCloseSearch : Event()
         data object OnOpenSearch : Event()
         data class OnSearchQueryChange(val query: String) : Event()
         data class OnSearchTriggered(val query: String) : Event()
+        data class AddToFavorite(val movie: Movie):Event()
     }
 
     sealed class SideEffects : ViewSideEffect {
         data class ShowErrorMessage(val errorMessage: String) : SideEffects()
+        data class ShowSnakeBar(val message: String):SideEffects()
     }
 
     data class State(

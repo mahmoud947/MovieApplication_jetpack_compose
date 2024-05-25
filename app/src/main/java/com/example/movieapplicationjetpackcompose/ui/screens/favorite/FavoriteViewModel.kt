@@ -4,6 +4,7 @@ import com.example.core.base.BaseViewModel
 import com.example.core.utils.Resource
 import com.example.core.utils.handle
 import com.example.domain.models.Movie
+import com.example.domain.usecase.AddMoviesToFavoriteUseCase
 import com.example.domain.usecase.GetFavoriteMoviesUseCase
 import com.example.domain.usecase.SearchOnFavoriteMoviesUseCase
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
@@ -15,19 +16,41 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase,
-    private val searchOnFavoriteMoviesUseCase: SearchOnFavoriteMoviesUseCase
+    private val searchOnFavoriteMoviesUseCase: SearchOnFavoriteMoviesUseCase,
+    private val addMoviesToFavoriteUseCase: AddMoviesToFavoriteUseCase
 ) : BaseViewModel<FavoriteContract.Event, FavoriteContract.State>() {
     override fun setInitialState(): FavoriteContract.State = FavoriteContract.State()
 
-    private val _movies:MutableList<Movie> = mutableListOf()
+    private val _movies: MutableList<Movie> = mutableListOf()
 
     override fun handleEvents(event: FavoriteContract.Event) {
         when (event) {
-            FavoriteContract.Event.FetchMovies -> fetchMovies()
-            FavoriteContract.Event.OnCloseSearch -> setState { copy(searchWidgetState = SearchWidgetState.CLOSED, movies = _movies) }
+            FavoriteContract.Event.FetchFavoriteMovies -> fetchMovies()
+            FavoriteContract.Event.OnCloseSearch -> setState {
+                copy(
+                    searchWidgetState = SearchWidgetState.CLOSED,
+                    movies = _movies
+                )
+            }
+
             FavoriteContract.Event.OnOpenSearch -> setState { copy(searchWidgetState = SearchWidgetState.OPENED) }
             is FavoriteContract.Event.OnSearchQueryChange -> setState { copy(searchQuery = event.query) }
             is FavoriteContract.Event.OnSearchTriggered -> search(query = event.query)
+            is FavoriteContract.Event.AddToFavorite -> addToFavorite(movie = event.movie)
+        }
+    }
+
+    private fun addToFavorite(movie: Movie) {
+        launchCoroutine(Dispatchers.IO) {
+            addMoviesToFavoriteUseCase(movie).collectLatest { resource: Resource<Unit> ->
+                resource.handle(onLoading = {
+                    setState { copy(loading = true) }
+                }, onSuccess = {
+                    setState { copy(loading = false) }
+                }, onError = {
+                    setState { copy(loading = true) }
+                })
+            }
         }
     }
 
@@ -52,6 +75,7 @@ class FavoriteViewModel @Inject constructor(
                 resource.handle(onLoading = {
                     setState { copy(loading = true) }
                 }, onSuccess = { movies ->
+                    _movies.clear()
                     _movies.addAll(movies)
                     setState { copy(loading = false, movies = _movies) }
                 }, onError = {

@@ -4,6 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,7 +32,7 @@ fun MovieCard(
     title: String,
     rating: String,
     isFavorite: Boolean,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: (isFavorite: Boolean) -> Unit
 ) {
 
     Column(
@@ -55,14 +58,14 @@ fun MovieCard(
                 )
 
                 Icon(
-                    painter = painterResource(id = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color.Red,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
                         .size(24.dp)
-                        .clickable { onFavoriteClick() }
+                        .clickable { onFavoriteClick(isFavorite) }
                 )
 
             }

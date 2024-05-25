@@ -37,7 +37,7 @@ fun FavoriteScreen(
     navController: NavController
 ) {
     LaunchedEffect(key1 = Unit) {
-        onEvent(FavoriteContract.Event.FetchMovies)
+        onEvent(FavoriteContract.Event.FetchFavoriteMovies)
     }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -85,7 +85,7 @@ fun FavoriteScreen(
                     )
                 }
                 if (pullToRefreshState.isRefreshing) {
-                    onEvent(FavoriteContract.Event.FetchMovies)
+                    onEvent(FavoriteContract.Event.FetchFavoriteMovies)
                 }
                 if (!state.loading) {
                     pullToRefreshState.endRefresh()
@@ -96,7 +96,7 @@ fun FavoriteScreen(
                             movieImageUrl = movie.posterUrl,
                             title = movie.title,
                             rating = movie.voteAverage.toString(),
-                            isFavorite = true
+                            isFavorite = movie.isFavorite
                         ) {
 
                         }

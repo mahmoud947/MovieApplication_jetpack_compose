@@ -6,9 +6,11 @@ import com.example.core.utils.getData
 import com.example.core.utils.handle
 import com.example.domain.models.Movie
 import com.example.domain.repository.MoviesRepository
+import com.example.domain.usecase.AddMoviesToFavoriteUseCase
 import com.example.domain.usecase.GetPopularMoviesUseCase
 import com.example.domain.usecase.SearchMoviesUseCase
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
+import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -17,19 +19,44 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
-    private val searchMoviesUseCase: SearchMoviesUseCase
+    private val searchMoviesUseCase: SearchMoviesUseCase,
+    private val addMoviesToFavoriteUseCase: AddMoviesToFavoriteUseCase
 ) : BaseViewModel<HomeContract.Event, HomeContract.State>() {
     override fun setInitialState(): HomeContract.State = HomeContract.State()
 
-    private val _movies:MutableList<Movie> = mutableListOf()
+    private val _movies: MutableList<Movie> = mutableListOf()
 
     override fun handleEvents(event: HomeContract.Event) {
         when (event) {
             HomeContract.Event.FetchMovies -> fetchMovies()
-            HomeContract.Event.OnCloseSearch -> setState { copy(searchWidgetState = SearchWidgetState.CLOSED, movies = _movies) }
+            HomeContract.Event.OnCloseSearch -> setState {
+                copy(
+                    searchWidgetState = SearchWidgetState.CLOSED,
+                    movies = _movies
+                )
+            }
+
             HomeContract.Event.OnOpenSearch -> setState { copy(searchWidgetState = SearchWidgetState.OPENED) }
             is HomeContract.Event.OnSearchQueryChange -> setState { copy(searchQuery = event.query) }
             is HomeContract.Event.OnSearchTriggered -> search(query = event.query)
+            is HomeContract.Event.AddToFavorite -> addToFavorite(movie = event.movie)
+        }
+    }
+
+    private fun addToFavorite(movie: Movie) {
+        launchCoroutine(Dispatchers.IO) {
+            addMoviesToFavoriteUseCase(movie).collectLatest { resource: Resource<Unit> ->
+                resource.handle(onLoading = {
+                    setState { copy(loading = true) }
+                }, onSuccess = {
+                    _movies.find { it.id == movie.id }?.apply {
+                        isFavorite = true
+                    }
+                    setState { copy(loading = false, movies = _movies) }
+                }, onError = {
+                    setState { copy(loading = true) }
+                })
+            }
         }
     }
 
@@ -54,6 +81,7 @@ class HomeViewModel @Inject constructor(
                 resource.handle(onLoading = {
                     setState { copy(loading = true) }
                 }, onSuccess = { movies ->
+                    _movies.clear()
                     _movies.addAll(movies)
                     setState { copy(loading = false, movies = _movies) }
                 }, onError = {
