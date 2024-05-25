@@ -1,32 +1,66 @@
 package com.example.movieapplicationjetpackcompose.ui.screens.home
 
 import com.example.core.base.BaseViewModel
+import com.example.core.utils.Resource
+import com.example.core.utils.getData
+import com.example.core.utils.handle
+import com.example.domain.models.Movie
 import com.example.domain.repository.MoviesRepository
+import com.example.domain.usecase.GetPopularMoviesUseCase
+import com.example.domain.usecase.SearchMoviesUseCase
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: MoviesRepository
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+    private val searchMoviesUseCase: SearchMoviesUseCase
 ) : BaseViewModel<HomeContract.Event, HomeContract.State>() {
     override fun setInitialState(): HomeContract.State = HomeContract.State()
+
+    private val _movies:MutableList<Movie> = mutableListOf()
 
     override fun handleEvents(event: HomeContract.Event) {
         when (event) {
             HomeContract.Event.FetchMovies -> fetchMovies()
-            HomeContract.Event.OnCloseSearch -> setState { copy(searchWidgetState = SearchWidgetState.CLOSED) }
+            HomeContract.Event.OnCloseSearch -> setState { copy(searchWidgetState = SearchWidgetState.CLOSED, movies = _movies) }
             HomeContract.Event.OnOpenSearch -> setState { copy(searchWidgetState = SearchWidgetState.OPENED) }
             is HomeContract.Event.OnSearchQueryChange -> setState { copy(searchQuery = event.query) }
+            is HomeContract.Event.OnSearchTriggered -> search(query = event.query)
+        }
+    }
+
+    private fun search(query: String) {
+        launchCoroutine(Dispatchers.IO) {
+            searchMoviesUseCase(input = query).collectLatest { resource: Resource<List<Movie>> ->
+                resource.handle(onLoading = {
+                    setState { copy(loading = true) }
+                }, onSuccess = { movies ->
+                    setState { copy(loading = false, movies = movies) }
+                }, onError = {
+                    setState { copy(loading = true) }
+                })
+            }
+
         }
     }
 
     private fun fetchMovies() {
-        launchCoroutine {
-            val movies = repository.getPopularMovies()
-            setState { copy(loading = false, movies = movies) }
+        launchCoroutine(Dispatchers.IO) {
+            getPopularMoviesUseCase().collectLatest { resource: Resource<List<Movie>> ->
+                resource.handle(onLoading = {
+                    setState { copy(loading = true) }
+                }, onSuccess = { movies ->
+                    _movies.addAll(movies)
+                    setState { copy(loading = false, movies = _movies) }
+                }, onError = {
+                    setState { copy(loading = true) }
+                })
+            }
+
         }
-
-
     }
 }

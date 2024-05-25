@@ -1,7 +1,6 @@
 package com.example.movieapplicationjetpackcompose.ui.screens.home
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -12,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -24,7 +25,6 @@ import com.example.core.base.ViewSideEffect
 import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.MainAppBar
 import com.example.movieapplicationjetpackcompose.components.MovieCard
-import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
 
@@ -41,6 +41,8 @@ fun HomeScreen(
     }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+    val pullToRefreshState = rememberPullToRefreshState()
+
     Scaffold(
         topBar = {
             MainAppBar(
@@ -53,7 +55,7 @@ fun HomeScreen(
                     onEvent(HomeContract.Event.OnCloseSearch)
                 },
                 onSearchClicked = {
-
+                    onEvent(HomeContract.Event.OnSearchTriggered(query = it))
                 },
                 onSearchTriggered = {
                     onEvent(HomeContract.Event.OnOpenSearch)
@@ -61,35 +63,50 @@ fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(pullToRefreshState.nestedScrollConnection),
     ) { innerPadding ->
 
-
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(180.dp),
+        Box(
             modifier = Modifier.padding(innerPadding),
         ) {
-            item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                Text(
-                    text = "Popular",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = merriweatherFontFamily,
-                    modifier = Modifier.padding(24.dp)
-                )
-            }
-            state.movies?.let { movies: List<Movie> ->
-                items(movies) { movie ->
-                    MovieCard(
-                        movieImageUrl = movie.posterUrl,
-                        title = movie.title,
-                        rating = movie.voteAverage.toString(),
-                        isFavorite = true
-                    ) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(180.dp),
 
+                ) {
+                item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                    Text(
+                        text = "Popular",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = merriweatherFontFamily,
+                        modifier = Modifier.padding(24.dp)
+                    )
+                }
+                if (pullToRefreshState.isRefreshing) {
+                    onEvent(HomeContract.Event.FetchMovies)
+                }
+                if (!state.loading) {
+                    pullToRefreshState.endRefresh()
+                }
+                state.movies?.let { movies: List<Movie> ->
+                    items(movies) { movie ->
+                        MovieCard(
+                            movieImageUrl = movie.posterUrl,
+                            title = movie.title,
+                            rating = movie.voteAverage.toString(),
+                            isFavorite = true
+                        ) {
+
+                        }
                     }
                 }
             }
+            PullToRefreshContainer(
+                modifier = Modifier.align(Alignment.TopCenter),
+                state = pullToRefreshState,
+            )
         }
     }
 }
