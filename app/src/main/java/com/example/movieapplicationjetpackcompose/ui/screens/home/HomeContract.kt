@@ -17,6 +17,8 @@ class HomeContract {
         data class OnSearchQueryChange(val query: String) : Event()
         data class OnSearchTriggered(val query: String) : Event()
         data class AddToFavorite(val movie: Movie): Event()
+        data class RemoveFromFavorite(val movieId:Int): Event()
+
     }
 
     sealed class SideEffects : ViewSideEffect {

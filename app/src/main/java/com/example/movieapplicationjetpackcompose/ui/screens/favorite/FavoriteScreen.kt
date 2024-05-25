@@ -91,16 +91,32 @@ fun FavoriteScreen(
                     pullToRefreshState.endRefresh()
                 }
                 state.movies?.let { movies: List<Movie> ->
-                    items(movies) { movie ->
-                        MovieCard(
-                            movieImageUrl = movie.posterUrl,
-                            title = movie.title,
-                            rating = movie.voteAverage.toString(),
-                            isFavorite = movie.isFavorite
-                        ) {
-
+                    if (movies.isEmpty()) {
+                        item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                            Text(
+                                text = "No favorite movies available",
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontFamily = merriweatherFontFamily,
+                                ),
+                                modifier = Modifier.padding(24.dp)
+                            )
+                        }
+                    }else{
+                        items(movies) { movie ->
+                            MovieCard(
+                                movieImageUrl = movie.posterUrl,
+                                title = movie.title,
+                                rating = movie.voteAverage.toString(),
+                                isFavorite = movie.isFavorite,
+                                onFavoriteClick = { isFavorite ->
+                                    if (isFavorite) {
+                                        onEvent(FavoriteContract.Event.RemoveFromFavorite(movieId = movie.id))
+                                    }
+                                }
+                            )
                         }
                     }
+
                 }
             }
             PullToRefreshContainer(

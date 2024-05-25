@@ -5,7 +5,8 @@ import com.example.core.utils.Resource
 import com.example.core.utils.handle
 import com.example.domain.models.Movie
 import com.example.domain.usecase.AddMoviesToFavoriteUseCase
-import com.example.domain.usecase.GetFavoriteMoviesUseCase
+import com.example.domain.usecase.GetFavoriteMoviesFlowUseCase
+import com.example.domain.usecase.RemoveMovieFromFavoriteUseCase
 import com.example.domain.usecase.SearchOnFavoriteMoviesUseCase
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,9 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    private val getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase,
+    private val getFavoriteMoviesFlowUseCase: GetFavoriteMoviesFlowUseCase,
     private val searchOnFavoriteMoviesUseCase: SearchOnFavoriteMoviesUseCase,
-    private val addMoviesToFavoriteUseCase: AddMoviesToFavoriteUseCase
+    private val addMoviesToFavoriteUseCase: AddMoviesToFavoriteUseCase,
+    private val removeMovieFromFavoriteUseCase: RemoveMovieFromFavoriteUseCase
 ) : BaseViewModel<FavoriteContract.Event, FavoriteContract.State>() {
     override fun setInitialState(): FavoriteContract.State = FavoriteContract.State()
 
@@ -37,6 +39,21 @@ class FavoriteViewModel @Inject constructor(
             is FavoriteContract.Event.OnSearchQueryChange -> setState { copy(searchQuery = event.query) }
             is FavoriteContract.Event.OnSearchTriggered -> search(query = event.query)
             is FavoriteContract.Event.AddToFavorite -> addToFavorite(movie = event.movie)
+            is FavoriteContract.Event.RemoveFromFavorite -> removeFromFavorite(id = event.movieId)
+        }
+    }
+
+    private fun removeFromFavorite(id: Int) {
+        launchCoroutine(Dispatchers.IO) {
+            removeMovieFromFavoriteUseCase(id).collectLatest { resource: Resource<Unit> ->
+                resource.handle(onLoading = {
+                    setState { copy(loading = true) }
+                }, onSuccess = {
+                    setState { copy(loading = false) }
+                }, onError = {
+                    setState { copy(loading = true) }
+                })
+            }
         }
     }
 
@@ -71,16 +88,10 @@ class FavoriteViewModel @Inject constructor(
 
     private fun fetchMovies() {
         launchCoroutine(Dispatchers.IO) {
-            getFavoriteMoviesUseCase().collectLatest { resource: Resource<List<Movie>> ->
-                resource.handle(onLoading = {
-                    setState { copy(loading = true) }
-                }, onSuccess = { movies ->
-                    _movies.clear()
-                    _movies.addAll(movies)
-                    setState { copy(loading = false, movies = _movies) }
-                }, onError = {
-                    setState { copy(loading = true) }
-                })
+            getFavoriteMoviesFlowUseCase().collectLatest { movies ->
+                _movies.clear()
+                _movies.addAll(movies)
+                setState { copy(loading = false, movies = _movies) }
             }
 
         }

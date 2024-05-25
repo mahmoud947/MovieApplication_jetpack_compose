@@ -8,6 +8,7 @@ import com.example.domain.models.Movie
 import com.example.domain.repository.MoviesRepository
 import com.example.domain.usecase.AddMoviesToFavoriteUseCase
 import com.example.domain.usecase.GetPopularMoviesUseCase
+import com.example.domain.usecase.RemoveMovieFromFavoriteUseCase
 import com.example.domain.usecase.SearchMoviesUseCase
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
 import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteContract
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     private val searchMoviesUseCase: SearchMoviesUseCase,
-    private val addMoviesToFavoriteUseCase: AddMoviesToFavoriteUseCase
+    private val addMoviesToFavoriteUseCase: AddMoviesToFavoriteUseCase,
+    private val removeMovieFromFavoriteUseCase: RemoveMovieFromFavoriteUseCase
 ) : BaseViewModel<HomeContract.Event, HomeContract.State>() {
     override fun setInitialState(): HomeContract.State = HomeContract.State()
 
@@ -40,6 +42,23 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnSearchQueryChange -> setState { copy(searchQuery = event.query) }
             is HomeContract.Event.OnSearchTriggered -> search(query = event.query)
             is HomeContract.Event.AddToFavorite -> addToFavorite(movie = event.movie)
+            is HomeContract.Event.RemoveFromFavorite -> removeFromFavorite(event.movieId)
+        }
+    }
+
+    private fun removeFromFavorite(id: Int) {
+        launchCoroutine(Dispatchers.IO) {
+            removeMovieFromFavoriteUseCase(id).collectLatest { resource: Resource<Unit> ->
+                resource.handle(onLoading = {
+                    setState { copy(loading = true) }
+                }, onSuccess = {
+                    _movies.find { it.id == id }?.apply {
+                        isFavorite = false
+                    }
+                }, onError = {
+                    setState { copy(loading = true) }
+                })
+            }
         }
     }
 

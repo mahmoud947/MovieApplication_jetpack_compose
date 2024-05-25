@@ -7,6 +7,8 @@ import com.example.data.mapper.toEntity
 import com.example.domain.models.Movie
 import com.example.domain.models.MovieCategory
 import com.example.domain.repository.MoviesRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
@@ -37,6 +39,12 @@ class MoviesRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoriteMovies(): List<Movie> {
         return dao.getFavoriteMovies().map { it.toDomain() }
+    }
+
+    override suspend fun getFavoriteMoviesFlow(): Flow<List<Movie>> {
+        return dao.getFavoriteMoviesFlow().map {movies->
+            movies.map { it.toDomain() }
+        }
     }
 
     override suspend fun addToFavorite(movie: Movie) {

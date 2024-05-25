@@ -100,6 +100,9 @@ fun HomeScreen(
                             onFavoriteClick = {isFavorite->
                                 if (!isFavorite){
                                     onEvent(HomeContract.Event.AddToFavorite(movie = movie))
+                                }else{
+                                    onEvent(HomeContract.Event.RemoveFromFavorite(movieId = movie.id))
+
                                 }
                             }
                         )
