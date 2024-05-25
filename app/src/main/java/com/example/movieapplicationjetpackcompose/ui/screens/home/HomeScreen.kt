@@ -25,6 +25,7 @@ import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.MainAppBar
 import com.example.movieapplicationjetpackcompose.components.MovieCard
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
+import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +74,7 @@ fun HomeScreen(
                     text = "Popular",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
+                    fontFamily = merriweatherFontFamily,
                     modifier = Modifier.padding(24.dp)
                 )
             }

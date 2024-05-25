@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.movieapplicationjetpackcompose.R
+import com.example.movieapplicationjetpackcompose.ui.theme.mulishFontFamily
 
 
 @Composable
@@ -72,6 +73,7 @@ fun MovieCard(
             text = title,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
+            fontFamily = mulishFontFamily,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -88,6 +90,7 @@ fun MovieCard(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = rating,
+                fontFamily = mulishFontFamily,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
