@@ -59,7 +59,7 @@ fun MovieDetailsScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())) {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                PosterSection(state = state, onEvent = onEvent)
+                PosterSection(state = state, onEvent = onEvent, onNavigateBack = onNavigateBack)
                 Column(modifier = Modifier.padding(all = 24.dp)) {
 
                     Spacer(modifier = Modifier.height(16.dp))

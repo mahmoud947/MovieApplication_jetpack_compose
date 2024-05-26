@@ -81,7 +81,9 @@ fun AppNavHost(
                 state = state,
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
-                onNavigateBack = {},
+                onNavigateBack = {
+                                 navController.popBackStack(NavigationItem.Home.route,true)
+                },
                 isFavorite = isFavorite,
                 movieId = movieId
             )

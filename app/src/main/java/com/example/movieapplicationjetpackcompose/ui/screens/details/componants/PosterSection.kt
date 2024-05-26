@@ -34,6 +34,7 @@ fun PosterSection(
     modifier: Modifier = Modifier,
     state: DetailsContract.State,
     onEvent: (DetailsContract.Event) -> Unit,
+    onNavigateBack:()->Unit
 ) {
 
     Box {
@@ -65,7 +66,7 @@ fun PosterSection(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = {
-
+                        onNavigateBack()
                     }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
