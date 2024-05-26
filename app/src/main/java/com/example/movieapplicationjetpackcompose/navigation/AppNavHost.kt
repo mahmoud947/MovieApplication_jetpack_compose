@@ -1,7 +1,5 @@
 package com.example.movieapplicationjetpackcompose.navigation
 
-import android.net.Uri
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,7 +10,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.ui.screens.details.DetailsViewModel
 import com.example.movieapplicationjetpackcompose.ui.screens.details.MovieDetailsScreen
 import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteScreen
@@ -40,7 +37,12 @@ fun AppNavHost(
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
                 onNavigateToDetails = { movie ->
-                    navController.navigate(NavigationItem.Details.passMovieData(isFavorite = movie.isFavorite, movieID = movie.id))
+                    navController.navigate(
+                        NavigationItem.Details.passMovieData(
+                            isFavorite = movie.isFavorite,
+                            movieID = movie.id
+                        )
+                    )
                 }
             )
         }
@@ -53,7 +55,12 @@ fun AppNavHost(
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
                 onNavigateToDetails = { movie ->
-                    navController.navigate(NavigationItem.Details.passMovieData(isFavorite = movie.isFavorite, movieID = movie.id))
+                    navController.navigate(
+                        NavigationItem.Details.passMovieData(
+                            isFavorite = movie.isFavorite,
+                            movieID = movie.id
+                        )
+                    )
                 }
             )
         }
@@ -74,7 +81,7 @@ fun AppNavHost(
                 state = state,
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
-                navController = navController,
+                onNavigateBack = {},
                 isFavorite = isFavorite,
                 movieId = movieId
             )

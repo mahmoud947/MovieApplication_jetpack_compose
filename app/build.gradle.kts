@@ -104,9 +104,12 @@ dependencies {
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)
 
-    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1")
+    implementation (libs.core)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation (libs.androidx.material.icons.extended)
+
 
 
 }

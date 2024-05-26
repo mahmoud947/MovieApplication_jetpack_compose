@@ -24,6 +24,9 @@ interface MovieDao {
     @Query("SELECT id FROM movieentity WHERE id=:movieId")
     suspend fun isFavorite(movieId: Int): Int?
 
+    @Query("SELECT id FROM movieentity WHERE id=:movieId")
+    fun isFavoriteFlow(movieId: Int): Flow<Int?>
+
 
     @Query("SELECT * FROM movieentity WHERE title LIKE '%' || :title || '%'")
     suspend fun searchMoviesByTitle(title: String): List<MovieEntity>

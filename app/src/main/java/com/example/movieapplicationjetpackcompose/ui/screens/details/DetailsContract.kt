@@ -6,8 +6,6 @@ import com.example.core.base.ViewState
 import com.example.domain.models.Movie
 import com.example.domain.models.MovieDetails
 import com.example.domain.models.MovieVideo
-import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
-import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteContract
 
 
 class DetailsContract {
@@ -16,6 +14,8 @@ class DetailsContract {
         data class FetchMovieDetails(val movieId: Int) : Event()
         data object OnStartVideo : Event()
         data object OnStopVideo : Event()
+        data class AddToFavorite(val movie: Movie): Event()
+        data class RemoveFromFavorite(val movieId:Int): Event()
 
     }
 
@@ -27,6 +27,7 @@ class DetailsContract {
         override val loading: Boolean = false,
         val videos: List<MovieVideo>? = null,
         val movie: MovieDetails? = null,
+        val isFavorite:Boolean = false,
         val isVideoStarted:Boolean = false
     ) : ViewState
 }

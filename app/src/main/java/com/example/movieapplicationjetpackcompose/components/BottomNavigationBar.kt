@@ -1,20 +1,22 @@
 package com.example.movieapplicationjetpackcompose.components
 
-import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.movieapplicationjetpackcompose.navigation.NavigationItem
 
 sealed class BottomNavItem(var title: String, var icon: ImageVector, var route: String) {
     data object Home : BottomNavItem("Home", Icons.Filled.Home, NavigationItem.Home.route)
-    data object Favorite : BottomNavItem("Favorite", Icons.Filled.Favorite, NavigationItem.Favorite.route)
+    data object Favorite : BottomNavItem("Favorite", Icons.Filled.Bookmark, NavigationItem.Favorite.route)
 }
 
 @Composable

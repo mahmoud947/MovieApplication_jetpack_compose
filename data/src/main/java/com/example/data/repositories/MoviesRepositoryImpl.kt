@@ -63,6 +63,16 @@ class MoviesRepositoryImpl @Inject constructor(
         dao.addToFavorite(movie = movie.toEntity())
     }
 
+    override suspend fun isFavoriteMovie(movieId: Int): Boolean {
+        return dao.isFavorite(movieId) != null
+    }
+
+    override suspend fun isFavoriteMovieFlow(movieId: Int): Flow<Boolean> {
+        return dao.isFavoriteFlow(movieId = movieId).map {
+            it != null
+        }
+    }
+
     override suspend fun removeFromFavorite(id: Int) {
         dao.removeFromFavorite(movieId = id)
     }

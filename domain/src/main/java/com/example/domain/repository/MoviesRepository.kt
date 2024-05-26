@@ -18,5 +18,7 @@ interface MoviesRepository {
 
     suspend fun addToFavorite(movie: Movie)
 
+    suspend fun isFavoriteMovie(movieId: Int):Boolean
+    suspend fun isFavoriteMovieFlow(movieId: Int):Flow<Boolean>
     suspend fun removeFromFavorite(id: Int)
 }

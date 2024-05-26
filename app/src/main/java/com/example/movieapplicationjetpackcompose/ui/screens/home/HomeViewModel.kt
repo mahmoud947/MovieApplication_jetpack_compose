@@ -2,16 +2,13 @@ package com.example.movieapplicationjetpackcompose.ui.screens.home
 
 import com.example.core.base.BaseViewModel
 import com.example.core.utils.Resource
-import com.example.core.utils.getData
 import com.example.core.utils.handle
 import com.example.domain.models.Movie
-import com.example.domain.repository.MoviesRepository
 import com.example.domain.usecase.AddMoviesToFavoriteUseCase
 import com.example.domain.usecase.GetPopularMoviesUseCase
 import com.example.domain.usecase.RemoveMovieFromFavoriteUseCase
 import com.example.domain.usecase.SearchMoviesUseCase
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
-import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
