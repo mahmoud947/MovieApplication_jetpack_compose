@@ -5,7 +5,6 @@ import com.example.core.base.ViewSideEffect
 import com.example.core.base.ViewState
 import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
-import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteContract
 
 
 class HomeContract {
@@ -22,7 +21,8 @@ class HomeContract {
     }
 
     sealed class SideEffects : ViewSideEffect {
-        data class ShowErrorMessage(val errorMessage: String) : SideEffects()
+        data class ErrorMessageSideEffect(val message: String?) : SideEffects()
+        data class ShowSnackBar(val message: String?) : SideEffects()
     }
 
     data class State(

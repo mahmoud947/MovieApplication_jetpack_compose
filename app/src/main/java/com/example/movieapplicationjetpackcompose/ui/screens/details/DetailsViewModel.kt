@@ -52,11 +52,12 @@ class DetailsViewModel @Inject constructor(
             val movieDetails = async {
                 getMovieDetailsUseCase(movieId).collectLatest { resource: Resource<MovieDetails> ->
                     resource.handle(onLoading = {
-                        setState { copy(loading = true) }
+                        updateLoadingState(true)
                     }, onSuccess = {
                         setState { copy(movie = it) }
                     }, onError = {
-                        setState { copy(loading = false) }
+                        updateLoadingState(true)
+                        handleError(it)
                     })
                 }
             }
@@ -75,11 +76,12 @@ class DetailsViewModel @Inject constructor(
         launchCoroutine(dispatcher = Dispatchers.IO) {
             getMovieVideosUseCase(movieId).collectLatest { resource: Resource<List<MovieVideo>> ->
                 resource.handle(onLoading = {
-                    setState { copy(loading = true) }
+                    updateLoadingState(true)
                 }, onSuccess = {
-                    setState { copy(videos = it) }
+                   updateLoadingState(false)
                 }, onError = {
-                    setState { copy(loading = false) }
+                    updateLoadingState(false)
+                    handleError(it)
                 })
             }
         }
@@ -92,9 +94,11 @@ class DetailsViewModel @Inject constructor(
                 resource.handle(onLoading = {
                     setState { copy(loading = true) }
                 }, onSuccess = {
-
+                    setState { copy(loading = false) }
+                    showSnackBar(message = "Movie removed from favorite successfully")
                 }, onError = {
                     setState { copy(loading = true) }
+                    handleError(it)
                 })
             }
         }
@@ -107,13 +111,32 @@ class DetailsViewModel @Inject constructor(
                 resource.handle(onLoading = {
                     setState { copy(loading = true) }
                 }, onSuccess = {
-
+                    showSnackBar(message = "Movie added to favorite successfully")
                     setState { copy(loading = false) }
                 }, onError = {
                     setState { copy(loading = true) }
+                    handleError(it)
                 })
             }
         }
     }
 
+
+
+    private fun handleError(exception: Throwable) {
+        updateLoadingState(false)
+        showErrorMessage(exception.message ?: "An unknown error occurred")
+    }
+
+    private fun updateLoadingState(isLoading: Boolean) {
+        setState { copy(loading = isLoading) }
+    }
+
+    private fun showErrorMessage(message: String) {
+        launchCoroutine{ setEffect { DetailsContract.SideEffects.ErrorMessageSideEffect(message) } }
+    }
+
+    private fun showSnackBar(message: String) {
+        launchCoroutine{ setEffect { DetailsContract.SideEffects.ErrorMessageSideEffect(message) } }
+    }
 }

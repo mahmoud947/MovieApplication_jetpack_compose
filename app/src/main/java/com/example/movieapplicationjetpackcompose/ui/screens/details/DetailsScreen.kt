@@ -19,20 +19,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.core.base.ViewSideEffect
 import com.example.data.mapper.toMovie
 import com.example.domain.models.MovieDetails
+import com.example.movieapplicationjetpackcompose.ui.dialogs.ErrorDialog
+import com.example.movieapplicationjetpackcompose.ui.dialogs.ShowSnackBar
+import com.example.movieapplicationjetpackcompose.ui.dialogs.rememberSnackbarHostStateWithLifecycle
 import com.example.movieapplicationjetpackcompose.ui.screens.details.componants.Chip
 import com.example.movieapplicationjetpackcompose.ui.screens.details.componants.InformationSection
 import com.example.movieapplicationjetpackcompose.ui.screens.details.componants.PosterSection
+import com.example.movieapplicationjetpackcompose.ui.screens.home.OnEffect
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
 
@@ -51,6 +61,53 @@ fun MovieDetailsScreen(
         onEvent(DetailsContract.Event.FetchMovieDetails(movieId = movieId))
         onEvent(DetailsContract.Event.FetchMovieVideos(movieId = movieId))
     }
+
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    var showSnackBar by remember { mutableStateOf(false) }
+    var snackBarMessage by remember { mutableStateOf("") }
+
+    val snackBarHostState = rememberSnackbarHostStateWithLifecycle()
+    val context = LocalContext.current
+
+    SnackbarHost(hostState = snackBarHostState)
+
+    effect.OnEffect { actions ->
+        when (actions) {
+            is DetailsContract.SideEffects.ErrorMessageSideEffect -> {
+                showErrorDialog = true
+                errorMessage =
+                    actions.message ?: "An unexpected error occurred. Please try again later."
+            }
+
+            is DetailsContract.SideEffects.ShowSnackBar -> {
+                showSnackBar = true
+                snackBarMessage = actions.message ?: ""
+            }
+        }
+    }
+    if (showErrorDialog) {
+        ErrorDialog(
+            title = "Error",
+            message = errorMessage,
+            showDialog = showErrorDialog,
+            onClick = {
+                showErrorDialog = false
+            },
+            onDismiss = { showErrorDialog = false }
+        )
+    }
+
+    if (showSnackBar) {
+        context.ShowSnackBar(
+            snackbarHostState = snackBarHostState,
+            message = snackBarMessage,
+            actionLabel = "Dismiss",
+            onActionClick = { }
+        )
+    }
+
 
     Scaffold(
         topBar = {

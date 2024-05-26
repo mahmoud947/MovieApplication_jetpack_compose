@@ -1,6 +1,7 @@
 package com.example.movieapplicationjetpackcompose.ui.screens.home
 
 import com.example.core.base.BaseViewModel
+
 import com.example.core.utils.Resource
 import com.example.core.utils.handle
 import com.example.domain.models.Movie
@@ -52,8 +53,10 @@ class HomeViewModel @Inject constructor(
                     _movies.find { it.id == id }?.apply {
                         isFavorite = false
                     }
+                   showSnackBar(message = "Movie removed from favorite successfully")
                 }, onError = {
-                    setState { copy(loading = true) }
+                    setState { copy(loading = false) }
+                    handleError(it)
                 })
             }
         }
@@ -69,8 +72,11 @@ class HomeViewModel @Inject constructor(
                         isFavorite = true
                     }
                     setState { copy(loading = false, movies = _movies) }
+                    showSnackBar(message = "Movie added to favorite successfully")
+
                 }, onError = {
                     setState { copy(loading = true) }
+                   handleError(it)
                 })
             }
         }
@@ -84,7 +90,8 @@ class HomeViewModel @Inject constructor(
                 }, onSuccess = { movies ->
                     setState { copy(loading = false, movies = movies) }
                 }, onError = {
-                    setState { copy(loading = true) }
+                    setState { copy(loading = false) }
+                    handleError(it)
                 })
             }
 
@@ -102,9 +109,28 @@ class HomeViewModel @Inject constructor(
                     setState { copy(loading = false, movies = _movies) }
                 }, onError = {
                     setState { copy(loading = true) }
+                    handleError(it)
                 })
             }
 
         }
+    }
+
+
+    private fun handleError(exception: Throwable) {
+        updateLoadingState(false)
+        showErrorMessage(exception.message ?: "An unknown error occurred")
+    }
+
+    private fun updateLoadingState(isLoading: Boolean) {
+        setState { copy(loading = isLoading) }
+    }
+
+    private fun showErrorMessage(message: String) {
+        launchCoroutine { setEffect { HomeContract.SideEffects.ErrorMessageSideEffect(message) } }
+    }
+
+    private fun showSnackBar(message: String) {
+        launchCoroutine { setEffect { HomeContract.SideEffects.ShowSnackBar(message) } }
     }
 }

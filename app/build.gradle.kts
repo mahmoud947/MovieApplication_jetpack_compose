@@ -107,13 +107,16 @@ dependencies {
 
     implementation(libs.core)
 
+    implementation (libs.easy.connectivity)
+
+
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.material.icons.extended)
 
     testImplementation(libs.kotlinx.coroutines.test)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testImplementation(libs.junit.jupiter.engine)
 
 }
 

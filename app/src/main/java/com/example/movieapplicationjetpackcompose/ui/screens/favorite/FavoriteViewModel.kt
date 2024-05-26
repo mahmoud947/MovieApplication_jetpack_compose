@@ -50,8 +50,10 @@ class FavoriteViewModel @Inject constructor(
                     setState { copy(loading = true) }
                 }, onSuccess = {
                     setState { copy(loading = false) }
+                    showSnackBar(message = "Movie removed from favorite successfully")
                 }, onError = {
                     setState { copy(loading = true) }
+                    handleError(it)
                 })
             }
         }
@@ -64,8 +66,10 @@ class FavoriteViewModel @Inject constructor(
                     setState { copy(loading = true) }
                 }, onSuccess = {
                     setState { copy(loading = false) }
+                   showSnackBar(message = "Movie Added to favorite successfully")
                 }, onError = {
-                    setState { copy(loading = true) }
+                    setState { copy(loading = false) }
+                    handleError(it)
                 })
             }
         }
@@ -93,7 +97,22 @@ class FavoriteViewModel @Inject constructor(
                 _movies.addAll(movies)
                 setState { copy(loading = false, movies = _movies) }
             }
-
         }
+    }
+
+    private fun handleError(exception: Throwable) {
+        updateLoadingState(false)
+        showErrorMessage(exception.message ?: "An unknown error occurred")
+    }
+    private fun updateLoadingState(isLoading: Boolean) {
+        setState { copy(loading = isLoading) }
+    }
+
+    private fun showErrorMessage(message: String) {
+        launchCoroutine{ setEffect { FavoriteContract.SideEffects.ErrorMessageSideEffect(message) } }
+    }
+
+    private fun showSnackBar(message: String) {
+        launchCoroutine{ setEffect { FavoriteContract.SideEffects.ErrorMessageSideEffect(message) } }
     }
 }

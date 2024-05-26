@@ -20,8 +20,8 @@ class FavoriteContract {
     }
 
     sealed class SideEffects : ViewSideEffect {
-        data class ShowErrorMessage(val errorMessage: String) : SideEffects()
-        data class ShowSnakeBar(val message: String):SideEffects()
+        data class ErrorMessageSideEffect(val message: String?) : ViewSideEffect
+        data class ShowSnackBar(val message: String?) : ViewSideEffect
     }
 
     data class State(

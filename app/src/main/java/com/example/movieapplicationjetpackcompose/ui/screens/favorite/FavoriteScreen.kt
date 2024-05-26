@@ -15,16 +15,24 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.core.base.ViewSideEffect
 import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.MainAppBar
 import com.example.movieapplicationjetpackcompose.components.MovieCard
+import com.example.movieapplicationjetpackcompose.ui.dialogs.ErrorDialog
+import com.example.movieapplicationjetpackcompose.ui.dialogs.ShowSnackBar
+import com.example.movieapplicationjetpackcompose.ui.dialogs.rememberSnackbarHostStateWithLifecycle
+import com.example.movieapplicationjetpackcompose.ui.screens.home.OnEffect
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
 
@@ -34,7 +42,7 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier, state: FavoriteContract.State,
     onEvent: (FavoriteContract.Event) -> Unit,
     effect: Flow<ViewSideEffect>,
-    onNavigateToDetails:(Movie)->Unit
+    onNavigateToDetails: (Movie) -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
         onEvent(FavoriteContract.Event.FetchFavoriteMovies)
@@ -43,6 +51,51 @@ fun FavoriteScreen(
 
     val pullToRefreshState = rememberPullToRefreshState()
 
+
+    var showErrorDialog by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    val snackBarHostState = rememberSnackbarHostStateWithLifecycle()
+    val context = LocalContext.current
+
+    var showSnackBar by remember { mutableStateOf(true) }
+    var snackBarMessage by remember { mutableStateOf("") }
+
+    effect.OnEffect { actions ->
+        when (actions) {
+            is FavoriteContract.SideEffects.ErrorMessageSideEffect -> {
+                showErrorDialog = true
+                errorMessage =
+                    actions.message ?: "An unexpected error occurred. Please try again later."
+            }
+
+            is FavoriteContract.SideEffects.ShowSnackBar ->{
+                showSnackBar = true
+                snackBarMessage = actions.message?:""
+            }
+        }
+
+    }
+    if (showErrorDialog) {
+        ErrorDialog(
+            title = "Error",
+            message = errorMessage,
+            showDialog = showErrorDialog,
+            onClick = {
+                showErrorDialog = false
+            },
+            onDismiss = { showErrorDialog = false }
+        )
+    }
+
+    if (showSnackBar){
+        context.ShowSnackBar(
+            snackbarHostState = snackBarHostState,
+            message = snackBarMessage,
+            actionLabel = "Dismiss",
+            onActionClick = {  }
+        )
+    }
     Scaffold(
         topBar = {
             MainAppBar(
@@ -101,10 +154,10 @@ fun FavoriteScreen(
                                 modifier = Modifier.padding(24.dp)
                             )
                         }
-                    }else{
+                    } else {
                         items(movies) { movie ->
                             MovieCard(
-                               movie = movie,
+                                movie = movie,
                                 onFavoriteClick = { isFavorite ->
                                     if (isFavorite) {
                                         onEvent(FavoriteContract.Event.RemoveFromFavorite(movieId = movie.id))
