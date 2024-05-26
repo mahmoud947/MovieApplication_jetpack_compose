@@ -112,6 +112,9 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     testImplementation(libs.kotlinx.coroutines.test)
+
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+
 }
 
 tasks.withType<Test> {
