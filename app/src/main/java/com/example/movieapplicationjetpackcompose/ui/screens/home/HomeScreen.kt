@@ -34,7 +34,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier, state: HomeContract.State,
     onEvent: (HomeContract.Event) -> Unit,
     effect: Flow<ViewSideEffect>,
-    navController: NavController
+    onNavigateToDetails:(Movie)->Unit
 ) {
     LaunchedEffect(key1 = Unit) {
         onEvent(HomeContract.Event.FetchMovies)
@@ -93,17 +93,16 @@ fun HomeScreen(
                 state.movies?.let { movies: List<Movie> ->
                     items(movies) { movie ->
                         MovieCard(
-                            movieImageUrl = movie.posterUrl,
-                            title = movie.title,
-                            rating = movie.voteAverage.toString(),
-                            isFavorite = movie.isFavorite,
+                            movie = movie,
                             onFavoriteClick = {isFavorite->
                                 if (!isFavorite){
                                     onEvent(HomeContract.Event.AddToFavorite(movie = movie))
                                 }else{
                                     onEvent(HomeContract.Event.RemoveFromFavorite(movieId = movie.id))
-
                                 }
+                            },
+                            onClicked = {
+                                onNavigateToDetails(it)
                             }
                         )
                     }

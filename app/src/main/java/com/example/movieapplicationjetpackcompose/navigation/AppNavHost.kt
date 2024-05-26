@@ -1,5 +1,6 @@
 package com.example.movieapplicationjetpackcompose.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -7,8 +8,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.domain.models.Movie
+import com.example.movieapplicationjetpackcompose.ui.screens.details.DetailsViewModel
+import com.example.movieapplicationjetpackcompose.ui.screens.details.MovieDetailsScreen
 import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteScreen
 import com.example.movieapplicationjetpackcompose.ui.screens.favorite.FavoriteViewModel
 import com.example.movieapplicationjetpackcompose.ui.screens.home.HomeScreen
@@ -33,9 +39,12 @@ fun AppNavHost(
                 state = state,
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
-                navController = navController
+                onNavigateToDetails = { movie ->
+                    navController.navigate(NavigationItem.Details.passMovieData(isFavorite = movie.isFavorite, movieID = movie.id))
+                }
             )
         }
+
         composable(NavigationItem.Favorite.route) {
             val viewModel: FavoriteViewModel = hiltViewModel()
             val state by viewModel.viewState.collectAsState()
@@ -43,10 +52,33 @@ fun AppNavHost(
                 state = state,
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
-                navController = navController
+                onNavigateToDetails = { movie ->
+                    navController.navigate(NavigationItem.Details.passMovieData(isFavorite = movie.isFavorite, movieID = movie.id))
+                }
             )
         }
-        composable(NavigationItem.Details.route) {
+
+        composable(
+            route = NavigationItem.Details.route,
+            arguments = listOf(
+                navArgument(DetailsArgs.MOVIE_ID.name) { type = NavType.IntType },
+                navArgument(DetailsArgs.IS_FAVORITE.name) { type = NavType.BoolType })
+        ) { backStackEntry ->
+            val movieId = backStackEntry.arguments?.getInt(DetailsArgs.MOVIE_ID.name) ?: 0
+            val isFavorite =
+                backStackEntry.arguments?.getBoolean(DetailsArgs.IS_FAVORITE.name) ?: false
+
+            val viewModel: DetailsViewModel = hiltViewModel()
+            val state by viewModel.viewState.collectAsState()
+            MovieDetailsScreen(
+                state = state,
+                onEvent = viewModel::setEvent,
+                effect = viewModel.effect,
+                navController = navController,
+                isFavorite = isFavorite,
+                movieId = movieId
+            )
         }
     }
 }
+

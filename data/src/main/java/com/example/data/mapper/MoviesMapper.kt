@@ -1,15 +1,18 @@
 package com.example.data.mapper
 
 import com.example.data.datasource.local.entity.MovieEntity
+import com.example.data.datasource.remote.dto.MovieDetailsDto
 import com.example.data.datasource.remote.dto.MovieDto
+import com.example.data.datasource.remote.dto.VideoDto
 import com.example.domain.models.Movie
+import com.example.domain.models.MovieDetails
+import com.example.domain.models.MovieVideo
 
 
-fun MovieDto.toDomain(isFavorite:Boolean): Movie = Movie(
+fun MovieDto.toDomain(isFavorite: Boolean): Movie = Movie(
     adult = adult ?: false,
     backdropUrl = backdropUrl,
-    genreIds = genreIds.orEmpty(),
-    id = id?:0,
+    id = id ?: 0,
     originalLanguage = originalLanguage.orEmpty(),
     originalTitle = originalTitle.orEmpty(),
     overview = overview.orEmpty(),
@@ -23,11 +26,23 @@ fun MovieDto.toDomain(isFavorite:Boolean): Movie = Movie(
     isFavorite = isFavorite
 )
 
+fun VideoDto.toDomain(): MovieVideo = MovieVideo(
+    id = id,
+    iso31661 = iso31661,
+    iso6391 = iso6391,
+    key = key,
+    name = name,
+    official = official,
+    publishedAt = publishedAt,
+    site = site,
+    size = size,
+    type = type
+)
+
 fun Movie.toEntity(): MovieEntity = MovieEntity(
     id = id ?: 0,
     adult = adult,
     backdropUrl = backdropUrl,
-    genreIds = genreIds,
     originalLanguage = originalLanguage,
     originalTitle = originalTitle,
     overview = overview,
@@ -43,7 +58,6 @@ fun Movie.toEntity(): MovieEntity = MovieEntity(
 fun MovieEntity.toDomain(): Movie = Movie(
     adult = adult ?: false,
     backdropUrl = backdropUrl.orEmpty(),
-    genreIds = genreIds,
     id = id,
     originalLanguage = originalLanguage.orEmpty(),
     originalTitle = originalTitle.orEmpty(),
@@ -56,4 +70,56 @@ fun MovieEntity.toDomain(): Movie = Movie(
     voteAverage = voteAverage ?: 0.0,
     voteCount = voteCount ?: 0,
     isFavorite = true
+)
+
+
+fun MovieDetailsDto.GenreDto.toDomain(): MovieDetails.Genre = MovieDetails.Genre(
+    id = id,
+    name = name,
+)
+
+
+fun MovieDetailsDto.ProductionCompanyDto.toDomain(): MovieDetails.ProductionCompany =
+    MovieDetails.ProductionCompany(
+        id = id, logoPath = logoPath, name = name, originCountry = originCountry
+    )
+
+fun MovieDetailsDto.ProductionCountryDto.toDomain(): MovieDetails.ProductionCountry =
+    MovieDetails.ProductionCountry(
+        iso31661 = iso31661, name = name
+    )
+
+fun MovieDetailsDto.SpokenLanguageDto.toDomain(): MovieDetails.SpokenLanguage =
+    MovieDetails.SpokenLanguage(
+        englishName = englishName, iso6391 = iso6391, name = name
+
+    )
+
+fun MovieDetailsDto.toDomain(): MovieDetails = MovieDetails(
+    adult = adult,
+    backdropUrl = backdropUrl,
+    belongsToCollection = belongsToCollection,
+    budget = budget,
+    genres = genres?.map { it.toDomain() },
+    homepage = homepage,
+    id = id,
+    imdbId = imdbId,
+    originCountry = originCountry,
+    originalLanguage = originalLanguage,
+    originalTitle = originalTitle,
+    overview = overview,
+    popularity = popularity,
+    posterUrl = posterUrl,
+    productionCompanies = productionCompanies?.map { it.toDomain() },
+    productionCountries = productionCountries?.map { it.toDomain() },
+    releaseDate = releaseDate,
+    revenue = revenue,
+    runtime = runtime,
+    spokenLanguages = spokenLanguages?.map { it.toDomain() },
+    status = status,
+    tagline = tagline,
+    title = title,
+    video = video,
+    voteAverage = voteAverage,
+    voteCount = voteCount
 )

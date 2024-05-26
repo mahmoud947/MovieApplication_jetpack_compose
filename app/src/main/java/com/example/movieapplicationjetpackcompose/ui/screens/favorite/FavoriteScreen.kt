@@ -34,7 +34,7 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier, state: FavoriteContract.State,
     onEvent: (FavoriteContract.Event) -> Unit,
     effect: Flow<ViewSideEffect>,
-    navController: NavController
+    onNavigateToDetails:(Movie)->Unit
 ) {
     LaunchedEffect(key1 = Unit) {
         onEvent(FavoriteContract.Event.FetchFavoriteMovies)
@@ -104,14 +104,14 @@ fun FavoriteScreen(
                     }else{
                         items(movies) { movie ->
                             MovieCard(
-                                movieImageUrl = movie.posterUrl,
-                                title = movie.title,
-                                rating = movie.voteAverage.toString(),
-                                isFavorite = movie.isFavorite,
+                               movie = movie,
                                 onFavoriteClick = { isFavorite ->
                                     if (isFavorite) {
                                         onEvent(FavoriteContract.Event.RemoveFromFavorite(movieId = movie.id))
                                     }
+                                },
+                                onClicked = {
+                                    onNavigateToDetails(it)
                                 }
                             )
                         }

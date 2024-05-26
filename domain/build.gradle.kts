@@ -2,7 +2,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
+    kotlin("plugin.serialization") version "2.0.0"
     kotlin("kapt")
+    id("kotlin-parcelize")
+
 }
 
 android {
@@ -50,6 +53,9 @@ dependencies {
 
     // Retrofit
     implementation(libs.retrofit)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
 }
 
 kapt {

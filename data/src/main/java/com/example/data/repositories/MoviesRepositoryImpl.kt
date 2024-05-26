@@ -6,6 +6,8 @@ import com.example.data.mapper.toDomain
 import com.example.data.mapper.toEntity
 import com.example.domain.models.Movie
 import com.example.domain.models.MovieCategory
+import com.example.domain.models.MovieDetails
+import com.example.domain.models.MovieVideo
 import com.example.domain.repository.MoviesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,6 +24,16 @@ class MoviesRepositoryImpl @Inject constructor(
             val isFavorite = dao.isFavorite(it.id ?: 0) != null
             it.toDomain(isFavorite = isFavorite)
         }
+    }
+
+    override suspend fun getMovieDetails(movieId: Int): MovieDetails {
+        val result = service.getMovieDetails(movieId = movieId)
+        return result.toDomain()
+    }
+
+    override suspend fun getMovieVideo(id: Int): List<MovieVideo> {
+        val result = service.getMovieVideos(movieId = id).results
+        return result.map { it.toDomain() }
     }
 
     override suspend fun search(query: String): List<Movie> {
@@ -42,7 +54,7 @@ class MoviesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getFavoriteMoviesFlow(): Flow<List<Movie>> {
-        return dao.getFavoriteMoviesFlow().map {movies->
+        return dao.getFavoriteMoviesFlow().map { movies ->
             movies.map { it.toDomain() }
         }
     }
@@ -54,6 +66,5 @@ class MoviesRepositoryImpl @Inject constructor(
     override suspend fun removeFromFavorite(id: Int) {
         dao.removeFromFavorite(movieId = id)
     }
-
 
 }

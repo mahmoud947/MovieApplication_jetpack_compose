@@ -14,7 +14,7 @@ val mulishFontFamily = FontFamily(
         Font(
             resId = R.font.mulish,
             weight = FontWeight.W400,
-            style = FontStyle.Italic
+            style = FontStyle.Normal
         ),
         Font(
             resId = R.font.mulish_bold,

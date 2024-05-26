@@ -1,13 +1,13 @@
 package com.example.domain.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-import androidx.annotation.Keep
 
-@Keep
+@Parcelize
 data class Movie(
     val adult: Boolean,
     val backdropUrl: String,
-    val genreIds: List<Int?>,
     val id: Int,
     val originalLanguage: String,
     val originalTitle: String,
@@ -20,4 +20,4 @@ data class Movie(
     val voteAverage: Double,
     val voteCount: Int,
     var isFavorite:Boolean
-)
+):Parcelable

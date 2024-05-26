@@ -2,7 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
+    kotlin("plugin.serialization") version "2.0.0"
     kotlin("kapt")
+    id("kotlin-parcelize")
+
 }
 
 android {
@@ -100,6 +103,11 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)
+
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
 
 }
 

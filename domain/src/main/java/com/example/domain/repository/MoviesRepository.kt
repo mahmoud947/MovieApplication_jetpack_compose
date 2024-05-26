@@ -1,10 +1,15 @@
 package com.example.domain.repository
 
 import com.example.domain.models.Movie
+import com.example.domain.models.MovieDetails
+import com.example.domain.models.MovieVideo
 import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {
     suspend fun getPopularMovies(): List<Movie>
+
+    suspend fun getMovieDetails(movieId:Int):MovieDetails
+    suspend fun getMovieVideo(id: Int): List<MovieVideo>
     suspend fun search(query: String): List<Movie>
     suspend fun searchOnFavorite(query: String): List<Movie>
 
