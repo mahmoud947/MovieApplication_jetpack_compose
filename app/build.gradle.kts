@@ -5,7 +5,6 @@ plugins {
     kotlin("plugin.serialization") version "2.0.0"
     kotlin("kapt")
     id("kotlin-parcelize")
-
 }
 
 android {
@@ -55,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -69,12 +67,15 @@ dependencies {
     implementation(project(":core"))
     implementation(libs.androidx.compose.material)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    testImplementation(libs.mockk)
 
     // Retrofit
     implementation(libs.retrofit)
@@ -86,10 +87,10 @@ dependencies {
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.android.compiler)
 
-    //Navigation
-    implementation (libs.androidx.navigation.compose)
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
 
-    //coil
+    // Coil
     implementation(libs.coil.compose)
 
     // ViewModel
@@ -99,19 +100,22 @@ dependencies {
 
     implementation(libs.androidx.hilt.navigation.compose)
 
-    //Room
+    // Room
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)
 
-    implementation (libs.core)
+    implementation(libs.core)
 
     implementation(libs.kotlinx.serialization.json)
 
-    implementation (libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material.icons.extended)
 
+    testImplementation(libs.kotlinx.coroutines.test)
+}
 
-
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 kapt {
