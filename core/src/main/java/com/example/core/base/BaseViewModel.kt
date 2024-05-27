@@ -84,7 +84,6 @@ abstract class BaseViewModel<Event : ViewEvent, UiState : ViewState> : ViewModel
     suspend fun setEffect(builder: () -> ViewSideEffect) {
         val effectValue = builder()
         _effect.send(effectValue)
-
     }
 
 

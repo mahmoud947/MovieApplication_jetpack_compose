@@ -1,5 +1,6 @@
 package com.example.movieapplicationjetpackcompose.ui.screens.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -9,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -18,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +34,12 @@ import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.MainAppBar
 import com.example.movieapplicationjetpackcompose.components.MovieCard
 import com.example.movieapplicationjetpackcompose.ui.dialogs.ErrorDialog
-import com.example.movieapplicationjetpackcompose.ui.dialogs.ShowSnackBar
-import com.example.movieapplicationjetpackcompose.ui.dialogs.rememberSnackbarHostStateWithLifecycle
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -55,11 +58,11 @@ fun HomeScreen(
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    val snackBarHostState = rememberSnackbarHostStateWithLifecycle()
     val context = LocalContext.current
 
-    var showSnackBar by remember { mutableStateOf(false) }
-    var snackBarMessage by remember { mutableStateOf("") }
+
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     effect.OnEffect { action ->
         when (action) {
@@ -68,8 +71,10 @@ fun HomeScreen(
                 errorMessage = action.message ?: "An unexpected error occurred. Please try again later."
             }
             is HomeContract.SideEffects.ShowSnackBar -> {
-                showSnackBar = true
-                snackBarMessage = action.message ?: ""
+                scope.launch {
+                    snackBarHostState.currentSnackbarData?.dismiss()
+                    snackBarHostState.showSnackbar(action.message?:"",withDismissAction = true)
+                }
             }
         }
     }
@@ -85,18 +90,11 @@ fun HomeScreen(
         )
     }
 
-    if (showSnackBar){
-        context.ShowSnackBar(
-            snackbarHostState = snackBarHostState,
-            message = snackBarMessage,
-            actionLabel = "Dismiss",
-            onActionClick = {  }
-        )
-    }
-
     Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             MainAppBar(
+                title = "Movie App",
                 searchWidgetState = state.searchWidgetState,
                 searchTextState = state.searchQuery,
                 onTextChange = {
@@ -170,8 +168,8 @@ fun HomeScreen(
 @Composable
 fun Flow<ViewSideEffect>.OnEffect(action: (effect: ViewSideEffect) -> Unit) {
     LaunchedEffect(Unit) {
-        onEach { effect ->
+       collectLatest {effect ->
             action(effect)
-        }.collect()
+        }
     }
 }

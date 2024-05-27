@@ -113,6 +113,6 @@ class FavoriteViewModel @Inject constructor(
     }
 
     private fun showSnackBar(message: String) {
-        launchCoroutine{ setEffect { FavoriteContract.SideEffects.ErrorMessageSideEffect(message) } }
+        launchCoroutine{ setEffect { FavoriteContract.SideEffects.ShowSnackBar(message) } }
     }
 }

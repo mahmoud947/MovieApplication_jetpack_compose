@@ -42,6 +42,7 @@ fun MainAppBar(
     searchWidgetState: SearchWidgetState,
     searchTextState: String,
     onTextChange: (String) -> Unit,
+    title:String,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
     onSearchTriggered: () -> Unit,
@@ -51,7 +52,8 @@ fun MainAppBar(
         SearchWidgetState.CLOSED -> {
             DefaultAppBar(
                 onSearchClicked = onSearchTriggered,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                title = title
             )
         }
 
@@ -68,12 +70,12 @@ fun MainAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DefaultAppBar(onSearchClicked: () -> Unit,scrollBehavior: TopAppBarScrollBehavior) {
+fun DefaultAppBar(onSearchClicked: () -> Unit,scrollBehavior: TopAppBarScrollBehavior,title:String) {
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
             Text(
-                text = "Movie App",
+                text = title,
                 fontFamily =merriweatherFontFamily,
             )
         },
@@ -173,7 +175,7 @@ fun SearchAppBar(
 @Composable
 @Preview
 fun DefaultAppBarPreview() {
-    DefaultAppBar(onSearchClicked = {}, scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior())
+    DefaultAppBar(onSearchClicked = {}, scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(), title = "Movie App")
 }
 
 @Composable

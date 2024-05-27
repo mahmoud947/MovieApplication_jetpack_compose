@@ -1,5 +1,6 @@
 package com.example.movieapplicationjetpackcompose.ui.screens.details
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,32 +21,33 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.core.base.ViewSideEffect
 import com.example.data.mapper.toMovie
 import com.example.domain.models.MovieDetails
 import com.example.movieapplicationjetpackcompose.ui.dialogs.ErrorDialog
-import com.example.movieapplicationjetpackcompose.ui.dialogs.ShowSnackBar
-import com.example.movieapplicationjetpackcompose.ui.dialogs.rememberSnackbarHostStateWithLifecycle
 import com.example.movieapplicationjetpackcompose.ui.screens.details.componants.Chip
 import com.example.movieapplicationjetpackcompose.ui.screens.details.componants.InformationSection
 import com.example.movieapplicationjetpackcompose.ui.screens.details.componants.PosterSection
 import com.example.movieapplicationjetpackcompose.ui.screens.home.OnEffect
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MovieDetailsScreen(
     modifier: Modifier = Modifier,
@@ -68,8 +70,8 @@ fun MovieDetailsScreen(
     var showSnackBar by remember { mutableStateOf(false) }
     var snackBarMessage by remember { mutableStateOf("") }
 
-    val snackBarHostState = rememberSnackbarHostStateWithLifecycle()
-    val context = LocalContext.current
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     SnackbarHost(hostState = snackBarHostState)
 
@@ -82,8 +84,10 @@ fun MovieDetailsScreen(
             }
 
             is DetailsContract.SideEffects.ShowSnackBar -> {
-                showSnackBar = true
-                snackBarMessage = actions.message ?: ""
+                scope.launch {
+                    snackBarHostState.currentSnackbarData?.dismiss()
+                    snackBarHostState.showSnackbar(snackBarMessage,withDismissAction = true)
+                }
             }
         }
     }
@@ -99,17 +103,9 @@ fun MovieDetailsScreen(
         )
     }
 
-    if (showSnackBar) {
-        context.ShowSnackBar(
-            snackbarHostState = snackBarHostState,
-            message = snackBarMessage,
-            actionLabel = "Dismiss",
-            onActionClick = { }
-        )
-    }
-
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState)},
         topBar = {
 
         }

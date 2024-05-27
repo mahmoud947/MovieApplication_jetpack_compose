@@ -137,6 +137,6 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun showSnackBar(message: String) {
-        launchCoroutine{ setEffect { DetailsContract.SideEffects.ErrorMessageSideEffect(message) } }
+        launchCoroutine{ setEffect { DetailsContract.SideEffects.ShowSnackBar(message) } }
     }
 }

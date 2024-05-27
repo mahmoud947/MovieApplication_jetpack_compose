@@ -1,5 +1,6 @@
 package com.example.movieapplicationjetpackcompose.ui.screens.favorite
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -9,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -18,11 +21,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.core.base.ViewSideEffect
@@ -30,12 +33,12 @@ import com.example.domain.models.Movie
 import com.example.movieapplicationjetpackcompose.components.MainAppBar
 import com.example.movieapplicationjetpackcompose.components.MovieCard
 import com.example.movieapplicationjetpackcompose.ui.dialogs.ErrorDialog
-import com.example.movieapplicationjetpackcompose.ui.dialogs.ShowSnackBar
-import com.example.movieapplicationjetpackcompose.ui.dialogs.rememberSnackbarHostStateWithLifecycle
 import com.example.movieapplicationjetpackcompose.ui.screens.home.OnEffect
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteScreen(
@@ -52,13 +55,13 @@ fun FavoriteScreen(
     val pullToRefreshState = rememberPullToRefreshState()
 
 
-    var showErrorDialog by remember { mutableStateOf(true) }
+    var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    val snackBarHostState = rememberSnackbarHostStateWithLifecycle()
-    val context = LocalContext.current
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    var showSnackBar by remember { mutableStateOf(true) }
+    var showSnackBar by remember { mutableStateOf(false) }
     var snackBarMessage by remember { mutableStateOf("") }
 
     effect.OnEffect { actions ->
@@ -89,16 +92,16 @@ fun FavoriteScreen(
     }
 
     if (showSnackBar){
-        context.ShowSnackBar(
-            snackbarHostState = snackBarHostState,
-            message = snackBarMessage,
-            actionLabel = "Dismiss",
-            onActionClick = {  }
-        )
+        scope.launch {
+            snackBarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.showSnackbar(snackBarMessage,withDismissAction = true)
+        }
     }
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState)},
         topBar = {
             MainAppBar(
+                title = "Favorite Movie",
                 searchWidgetState = state.searchWidgetState,
                 searchTextState = state.searchQuery,
                 onTextChange = {
