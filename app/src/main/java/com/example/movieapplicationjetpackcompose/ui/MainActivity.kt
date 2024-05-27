@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.movieapplicationjetpackcompose.components.BottomNavigationBar
 import com.example.movieapplicationjetpackcompose.navigation.AppNavHost
+import com.example.movieapplicationjetpackcompose.shared.BottomNavigationBar
 import com.example.movieapplicationjetpackcompose.ui.theme.MovieApplicationjetpackComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 }) { innerPadding ->
                     AppNavHost(
                         navController = navController,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())
                     )
                 }
             }

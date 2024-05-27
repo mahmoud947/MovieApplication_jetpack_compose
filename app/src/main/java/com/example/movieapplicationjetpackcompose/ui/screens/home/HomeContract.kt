@@ -4,7 +4,7 @@ import com.example.core.base.ViewEvent
 import com.example.core.base.ViewSideEffect
 import com.example.core.base.ViewState
 import com.example.domain.models.Movie
-import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
+import com.example.movieapplicationjetpackcompose.shared.SearchWidgetState
 
 
 class HomeContract {

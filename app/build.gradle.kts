@@ -109,6 +109,7 @@ dependencies {
 
     implementation (libs.easy.connectivity)
 
+    implementation (libs.compose.shimmer)
 
     implementation(libs.kotlinx.serialization.json)
 

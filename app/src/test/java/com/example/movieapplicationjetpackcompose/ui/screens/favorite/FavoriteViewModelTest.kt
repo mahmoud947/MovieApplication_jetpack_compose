@@ -6,7 +6,7 @@ import com.example.domain.usecase.AddMoviesToFavoriteUseCase
 import com.example.domain.usecase.GetFavoriteMoviesFlowUseCase
 import com.example.domain.usecase.RemoveMovieFromFavoriteUseCase
 import com.example.domain.usecase.SearchOnFavoriteMoviesUseCase
-import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
+import com.example.movieapplicationjetpackcompose.shared.SearchWidgetState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

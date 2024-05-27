@@ -39,7 +39,6 @@ fun AppNavHost(
                 onNavigateToDetails = { movie ->
                     navController.navigate(
                         NavigationItem.Details.passMovieData(
-                            isFavorite = movie.isFavorite,
                             movieID = movie.id
                         )
                     )
@@ -57,7 +56,6 @@ fun AppNavHost(
                 onNavigateToDetails = { movie ->
                     navController.navigate(
                         NavigationItem.Details.passMovieData(
-                            isFavorite = movie.isFavorite,
                             movieID = movie.id
                         )
                     )
@@ -69,22 +67,20 @@ fun AppNavHost(
             route = NavigationItem.Details.route,
             arguments = listOf(
                 navArgument(DetailsArgs.MOVIE_ID.name) { type = NavType.IntType },
-                navArgument(DetailsArgs.IS_FAVORITE.name) { type = NavType.BoolType })
+            )
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt(DetailsArgs.MOVIE_ID.name) ?: 0
-            val isFavorite =
-                backStackEntry.arguments?.getBoolean(DetailsArgs.IS_FAVORITE.name) ?: false
 
             val viewModel: DetailsViewModel = hiltViewModel()
             val state by viewModel.viewState.collectAsState()
+
             MovieDetailsScreen(
                 state = state,
                 onEvent = viewModel::setEvent,
                 effect = viewModel.effect,
                 onNavigateBack = {
-                                 navController.popBackStack(NavigationItem.Home.route,false)
+                    navController.popBackStack(NavigationItem.Home.route, false)
                 },
-                isFavorite = isFavorite,
                 movieId = movieId
             )
         }

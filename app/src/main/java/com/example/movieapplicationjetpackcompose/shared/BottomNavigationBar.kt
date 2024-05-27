@@ -1,4 +1,4 @@
-package com.example.movieapplicationjetpackcompose.components
+package com.example.movieapplicationjetpackcompose.shared
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark

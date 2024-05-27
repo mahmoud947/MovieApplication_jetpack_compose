@@ -1,4 +1,4 @@
-package com.example.movieapplicationjetpackcompose.components
+package com.example.movieapplicationjetpackcompose.shared
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

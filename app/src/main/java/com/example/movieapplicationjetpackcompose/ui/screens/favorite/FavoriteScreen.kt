@@ -30,8 +30,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.core.base.ViewSideEffect
 import com.example.domain.models.Movie
-import com.example.movieapplicationjetpackcompose.components.MainAppBar
-import com.example.movieapplicationjetpackcompose.components.MovieCard
+import com.example.movieapplicationjetpackcompose.shared.MainAppBar
+import com.example.movieapplicationjetpackcompose.shared.MovieCard
+import com.example.movieapplicationjetpackcompose.shared.ShimmerMovieList
 import com.example.movieapplicationjetpackcompose.ui.dialogs.ErrorDialog
 import com.example.movieapplicationjetpackcompose.ui.screens.home.OnEffect
 import com.example.movieapplicationjetpackcompose.ui.theme.merriweatherFontFamily
@@ -72,9 +73,9 @@ fun FavoriteScreen(
                     actions.message ?: "An unexpected error occurred. Please try again later."
             }
 
-            is FavoriteContract.SideEffects.ShowSnackBar ->{
+            is FavoriteContract.SideEffects.ShowSnackBar -> {
                 showSnackBar = true
-                snackBarMessage = actions.message?:""
+                snackBarMessage = actions.message ?: ""
             }
         }
 
@@ -91,14 +92,14 @@ fun FavoriteScreen(
         )
     }
 
-    if (showSnackBar){
+    if (showSnackBar) {
         scope.launch {
             snackBarHostState.currentSnackbarData?.dismiss()
-            snackBarHostState.showSnackbar(snackBarMessage,withDismissAction = true)
+            snackBarHostState.showSnackbar(snackBarMessage, withDismissAction = true)
         }
     }
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState)},
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         topBar = {
             MainAppBar(
                 title = "Favorite Movie",
@@ -127,54 +128,64 @@ fun FavoriteScreen(
         Box(
             modifier = Modifier.padding(innerPadding),
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(180.dp),
+             ShimmerMovieList(isLoading = state.loading, contentAfterLoading = {
+                 LazyVerticalGrid(
+                     columns = GridCells.Adaptive(180.dp),
 
-                ) {
-                item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    Text(
-                        text = "Favorite",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = merriweatherFontFamily,
-                        modifier = Modifier.padding(24.dp)
-                    )
-                }
-                if (pullToRefreshState.isRefreshing) {
-                    onEvent(FavoriteContract.Event.FetchFavoriteMovies)
-                }
-                if (!state.loading) {
-                    pullToRefreshState.endRefresh()
-                }
-                state.movies?.let { movies: List<Movie> ->
-                    if (movies.isEmpty()) {
-                        item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                            Text(
-                                text = "No favorite movies available",
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    fontFamily = merriweatherFontFamily,
-                                ),
-                                modifier = Modifier.padding(24.dp)
-                            )
-                        }
-                    } else {
-                        items(movies) { movie ->
-                            MovieCard(
-                                movie = movie,
-                                onFavoriteClick = { isFavorite ->
-                                    if (isFavorite) {
-                                        onEvent(FavoriteContract.Event.RemoveFromFavorite(movieId = movie.id))
-                                    }
-                                },
-                                onClicked = {
-                                    onNavigateToDetails(it)
-                                }
-                            )
-                        }
-                    }
+                     ) {
+                     item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                         Text(
+                             text = "Favorite",
+                             style = MaterialTheme.typography.titleLarge,
+                             fontWeight = FontWeight.Bold,
+                             fontFamily = merriweatherFontFamily,
+                             modifier = Modifier.padding(24.dp)
+                         )
+                     }
 
-                }
-            }
+
+                     if (pullToRefreshState.isRefreshing) {
+                         onEvent(FavoriteContract.Event.FetchFavoriteMovies)
+                     }
+                     if (!state.loading) {
+                         pullToRefreshState.endRefresh()
+                     }
+                     state.movies?.let { movies: List<Movie> ->
+                         if (movies.isEmpty()) {
+                             item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                                 Text(
+                                     text = "No favorite movies available",
+                                     style = MaterialTheme.typography.bodyLarge.copy(
+                                         fontFamily = merriweatherFontFamily,
+                                     ),
+                                     modifier = Modifier.padding(24.dp)
+                                 )
+                             }
+                         } else {
+                             items(movies) { movie ->
+                                 MovieCard(
+                                     movie = movie,
+                                     onFavoriteClick = { isFavorite ->
+                                         if (isFavorite) {
+                                             onEvent(
+                                                 FavoriteContract.Event.RemoveFromFavorite(
+                                                     movieId = movie.id
+                                                 )
+                                             )
+                                         }
+                                     },
+                                     onClicked = {
+                                         onNavigateToDetails(it)
+                                     }
+                                 )
+                             }
+                         }
+
+                     }
+                 }
+             }
+            )
+
             PullToRefreshContainer(
                 modifier = Modifier.align(Alignment.TopCenter),
                 state = pullToRefreshState,

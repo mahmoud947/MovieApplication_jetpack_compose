@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
@@ -62,22 +63,35 @@ fun PosterSection(
             title = { },
             navigationIcon = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(onClick = {
-                        onNavigateBack()
-                    }) {
+                    IconButton(
+                        onClick = {
+                            onNavigateBack()
+                        },
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), shape = CircleShape)
+                    ) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
                         )
                     }
 
-                    IconButton(onClick = {
-                    }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More")
+                    IconButton(
+                        onClick = {
+                            onNavigateBack()
+                        },
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), shape = CircleShape)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Back",
+                        )
                     }
+
                 }
 
             },

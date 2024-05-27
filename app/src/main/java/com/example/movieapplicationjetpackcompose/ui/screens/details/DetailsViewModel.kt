@@ -79,6 +79,7 @@ class DetailsViewModel @Inject constructor(
                     updateLoadingState(true)
                 }, onSuccess = {
                    updateLoadingState(false)
+                    setState { copy(videos = it) }
                 }, onError = {
                     updateLoadingState(false)
                     handleError(it)

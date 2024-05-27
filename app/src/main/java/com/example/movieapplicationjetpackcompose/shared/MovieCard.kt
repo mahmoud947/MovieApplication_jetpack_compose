@@ -1,4 +1,4 @@
-package com.example.movieapplicationjetpackcompose.components
+package com.example.movieapplicationjetpackcompose.shared
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -68,11 +68,11 @@ fun MovieCard(
                 Icon(
                     imageVector = if (movie.isFavorite) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
                     contentDescription = null,
-                    tint = Color.Yellow,
+                    tint = if (movie.isFavorite) Color.Yellow else Color.White,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
-                        .size(24.dp)
+                        .size(32.dp)
                         .clickable { onFavoriteClick(movie.isFavorite) }
                 )
 

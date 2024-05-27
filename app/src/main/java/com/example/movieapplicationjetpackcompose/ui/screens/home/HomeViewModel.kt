@@ -8,7 +8,7 @@ import com.example.domain.usecase.AddMoviesToFavoriteUseCase
 import com.example.domain.usecase.GetPopularMoviesUseCase
 import com.example.domain.usecase.RemoveMovieFromFavoriteUseCase
 import com.example.domain.usecase.SearchMoviesUseCase
-import com.example.movieapplicationjetpackcompose.components.SearchWidgetState
+import com.example.movieapplicationjetpackcompose.shared.SearchWidgetState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
