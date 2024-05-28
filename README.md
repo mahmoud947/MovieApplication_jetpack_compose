@@ -62,13 +62,6 @@ Ensure the following dependencies are added to your `build.gradle` files:
 - Hilt
 - [Easy Connectivity](https://github.com/mahmoud947/easy_connectivity) - This is my own library for handling network connectivity status.
 
-### Project Structure
-
-- **Repository Pattern**: Handles data operations and abstracts the source of data (API, local database).
-- **ViewModel**: Interacts with the repository to fetch and store data. Uses LiveData or StateFlow to observe data changes in the UI.
-- **Composable Functions**: Build UI components using Jetpack Compose.
-- **Navigation**: Use Jetpack Compose Navigation for screen transitions.
-
 ## Architecture
 
 The project follows the Clean Architecture approach, separating UI, domain, and data layers. Dependency injection is managed using Hilt.
@@ -78,12 +71,3 @@ The project follows the Clean Architecture approach, separating UI, domain, and 
 - **UI Layer**: Contains the UI components and ViewModels.
 - **Domain Layer**: Contains use cases and domain models.
 - **Data Layer**: Contains repositories, data sources, and models for API and database interactions.
-
-## Assessment Criteria
-
-- **Functionality**: Ensure all features work as expected.
-- **Code Quality**: Clean, readable, and maintainable code.
-- **UI/UX**: Follow provided UI/UX design guidelines.
-- **Architecture**: Proper Clean Architecture implementation.
-- **Asynchronous Handling**: Efficient use of Coroutines.
-- **Testing**: Unit tests for ViewModel and repository classes.
