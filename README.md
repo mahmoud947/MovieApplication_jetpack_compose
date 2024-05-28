@@ -44,10 +44,6 @@ Welcome to the **MovieApplication Jetpack Compose** repository! This project dem
    ```
 2. Open the project in Android Studio.
 3. Sync the project with Gradle files.
-4. Add your API key in the `local.properties` file:
-   ```properties
-   TMDB_API_KEY=your_api_key_here
-   ```
 5. Run the application on an emulator or physical device.
 
 ## Setup
