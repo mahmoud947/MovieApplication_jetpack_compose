@@ -10,8 +10,10 @@ Welcome to the **MovieApplication Jetpack Compose** repository! This project dem
 |-----------------------------------------|-----------------------------------------|----------------------------------------|
 | ![Screenshot 10](screenshot/screen10.png)|
 
+## Video
 
  https://github.com/mahmoud947/MovieApplication_jetpack_compose/assets/65209396/310ba2c0-cc3a-42b0-b681-2c128c9c8cbf 
+ 
  https://github.com/mahmoud947/MovieApplication_jetpack_compose/assets/65209396/227bc521-e32c-4c63-ad69-20774af12cea 
 
 
