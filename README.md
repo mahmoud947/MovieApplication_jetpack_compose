@@ -2,11 +2,11 @@
 
 Welcome to the **MovieApplication Jetpack Compose** repository! This project demonstrates building a modern Android application using Jetpack Compose, Kotlin, and various Android libraries. The application interacts with a RESTful API to display a list of movies, allowing users to search for movies, view movie details, and manage a list of favorite movies.
 
-| ![Screenshot 1](screenshot/screenshot1.png) | ![Screenshot 2](screenshot/screenshot2.png) | ![Screenshot 3](screenshot/screenshot3.png) |
+| ![Screenshot 1](screenshot/screen1.png) | ![Screenshot 2](screenshot/screen2.png) | ![Screenshot 3](screenshot/screen3.png) |
+|-----------------------------------------|-----------------------------------------|----------------------------------------|
+| ![Screenshot 4](screenshot/screen4.png) | ![Screenshot 5](screenshot/screen5.png) | ![Screenshot 6](screenshot/screen6.png)|
 |----------------------------------------------|----------------------------------------------|----------------------------------------------|
-| ![Screenshot 4](screenshot/screenshot4.png) | ![Screenshot 5](screenshot/screenshot5.png) | ![Screenshot 6](screenshot/screenshot6.png)|
-|----------------------------------------------|----------------------------------------------|----------------------------------------------|
-| ![Screenshot 7](screenshot/screenshot7.png) | ![Screenshot 8](screenshot/screenshot8.png) | ![Screenshot 9](screenshot/screenshot9.png) | ![Screenshot 10](screenshot/screenshot10.png)|
+| ![Screenshot 7](screenshot/screen7.png) | ![Screenshot 8](screenshot/screen8.png) | ![Screenshot 9](screenshot/screen9.png) | ![Screenshot 10](screenshot/screen10.png)|
 ## Project Overview
 
 - **Fetch Movie Data**: Use the TMDb API to fetch a list of popular movies.
