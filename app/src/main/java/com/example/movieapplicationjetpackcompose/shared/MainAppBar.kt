@@ -86,7 +86,6 @@ fun DefaultAppBar(onSearchClicked: () -> Unit,scrollBehavior: TopAppBarScrollBeh
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Search Icon",
-                    tint = Color.White
                 )
             }
         }
